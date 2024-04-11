@@ -126,6 +126,8 @@
 //   }
 // }
 
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -133,8 +135,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'pages/basics_example.dart';
 import 'pages/events_example.dart';
 import 'tab.dart';
+import 'widgets/myAppBar.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyB79KpPnGNoUzrdnkxDQzGz8Ho8dcWr_h4",
+          authDomain: "m12calendar-flutter.firebaseapp.com",
+          projectId: "m12calendar-flutter",
+          storageBucket: "m12calendar-flutter.appspot.com",
+          messagingSenderId: "632888317464",
+          appId: "1:632888317464:web:2f67cd715fb2b213ad156d"));
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
@@ -144,13 +158,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'M12 Calendar',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blueGrey
-        ),
-        textTheme: GoogleFonts.ralewayTextTheme()
-      ),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
+          textTheme: GoogleFonts.ralewayTextTheme()),
       home: StartPage(),
-
     );
   }
 }
@@ -164,26 +174,16 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('M12 Calendar'),
-        leading: IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => StartPage())), icon: Icon(Icons.home_outlined)),
-        actions: [
-          IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TableEventsExample())), icon: Icon(Icons.calendar_month_outlined)),
-          //IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => LogOutPage())), icon: Icon(Icons.calendar_month_outlined))
-        ],
-      ),
+      appBar: AppBars(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20.0),
             ElevatedButton(
-              child: Text(''),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TableEventsExample()),
-              ),
-            ),
+              child: Text('This is a button'),
+            onPressed: () => //FIXME: Add onPressed,
+              )
           ],
         ),
       ),

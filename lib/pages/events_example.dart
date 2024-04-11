@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/material.dart';
+import 'package:m12calendar_flutter/widgets/myAppBar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../utils.dart';
@@ -85,9 +86,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('TableCalendar - Events'),
-      ),
+      appBar: AppBars(context),
       body: Column(
         children: [
           TableCalendar<Event>(
@@ -123,25 +122,35 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             child: ValueListenableBuilder<List<Event>>(
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
+                return Container(
+                  margin: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 4.0,
+                            ),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: Color.fromARGB(255, 105, 108, 111),
+                    ),
+                    child: ListView.builder(
+                      itemCount: value.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 4.0,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Color.fromARGB(255, 205, 215, 223),
+                            ),
+                            child: ListTile(
+                              onTap: () => print('${value[index]}'),
+                              title: Text('${value[index]}'),
+                            ));
+                      },
+                    ));
               },
             ),
           ),
