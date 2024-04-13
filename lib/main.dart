@@ -3,9 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'pages/basics_example.dart';
-import 'pages/events_example.dart';
-import 'tab.dart';
+import 'pages/calendarPage.dart';
 import 'widgets/myAppBar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -54,9 +52,10 @@ class _StartPageState extends State<StartPage> {
           children: [
             const SizedBox(height: 20.0),
             ElevatedButton(
-                child: Text('This is a button'),
-                onPressed: () => Text("FIXME") //FIXME: Add onPressed,
-                )
+              child: Text('This is a button'),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => TableCalendarPage())),
+            )
           ],
         ),
       ),

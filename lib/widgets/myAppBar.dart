@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:m12calendar_flutter/pages/calendarPage.dart';
 import 'package:m12calendar_flutter/pages/login.dart';
 import 'package:m12calendar_flutter/pages/logout.dart';
 import 'package:m12calendar_flutter/pages/signin.dart';
@@ -23,7 +24,7 @@ class AppBars extends AppBar {
                         onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => TableEventsExample())),
+                                builder: (_) => TableCalendarPage())),
                         icon: Icon(Icons.calendar_month_outlined)),
                     IconButton(
                         onPressed: () => Navigator.push(context,

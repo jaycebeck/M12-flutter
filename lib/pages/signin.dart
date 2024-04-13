@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:m12calendar_flutter/authController.dart';
 import 'package:m12calendar_flutter/main.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -15,13 +16,16 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _signUpWithEmailAndPassword() async {
     try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      userSetup();
       // Navigate to the next screen upon successful sign-up
       // Replace 'NextScreen()' with the desired screen
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => StartPage()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => StartPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
         _errorMessage = e.message ?? 'An error occurred';
@@ -59,7 +63,8 @@ class _SignUpPageState extends State<SignUpPage> {
               onPressed: _signUpWithEmailAndPassword,
               child: Text('Sign Up'),
             ),
-            if (_errorMessage.isNotEmpty) Text(_errorMessage, style: TextStyle(color: Colors.red)),
+            if (_errorMessage.isNotEmpty)
+              Text(_errorMessage, style: TextStyle(color: Colors.red)),
           ],
         ),
       ),
