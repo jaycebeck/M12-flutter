@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:m12calendar_flutter/main.dart';
 
+import 'signup.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -15,13 +17,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      // ignore: unused_local_variable
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => StartPage()));
-      print(userCredential.user?.email);
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => StartPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
         _errorMessage = e.message ?? 'An error occurred';
@@ -59,7 +63,16 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _signInWithEmailAndPassword,
               child: Text('Sign In'),
             ),
-            if (_errorMessage.isNotEmpty) Text(_errorMessage, style: TextStyle(color: Colors.red)),
+            if (_errorMessage.isNotEmpty)
+              Text(_errorMessage, style: TextStyle(color: Colors.red)),
+            Container(
+              margin: const EdgeInsets.only(top: 20.0),
+              child: ElevatedButton(
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => SignUpPage())),
+                child: Text("Sign Up"),
+              ),
+            ),
           ],
         ),
       ),

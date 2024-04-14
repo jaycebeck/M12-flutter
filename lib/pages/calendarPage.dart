@@ -1,15 +1,11 @@
 // Adapted from Table Calendar Example Code
 
 import 'dart:core';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:m12calendar_flutter/authController.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../utils.dart';
 import '../widgets/listTasks.dart';
 import '../widgets/myAppBar.dart';
 
@@ -31,7 +27,22 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+
+    // Initialize the ValueNotifier with an empty list
+    _selectedEvents = ValueNotifier<List<Event>>([]);
+
+    // Load the initial events for the current day (_selectedDay)
+    fetchEventsForDay(_selectedDay!).then((_) {
+      // Update the _selectedEvents with the fetched events
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
+    });
+  }
+
+  @override
+  void dispose() {
+    _eventController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -43,6 +54,9 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
     setState(() {
       _eventsMap[day] = events;
     });
+
+    // Update the ValueNotifier with the fetched events
+    _selectedEvents.value = events;
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -90,13 +104,22 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                             margin: const EdgeInsets.only(top: 20.0),
                             child: ElevatedButton(
                                 onPressed: () async {
+                                  // Add the task
                                   await addTask(
                                       _eventController.text,
                                       _descriptionController.text,
-                                      _selectedDay!.toString());
-                                  Navigator.pop(context);
+                                      _selectedDay!);
+
+                                  // Update the selected events list
                                   _selectedEvents.value =
                                       await getTasksForDay(_selectedDay!);
+
+                                  // Clear the text fields
+                                  _eventController.clear();
+                                  _descriptionController.clear();
+
+                                  // Close the dialog
+                                  Navigator.pop(context);
                                 },
                                 child: Text('Save')))
                       ],
@@ -173,7 +196,7 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
               ),
             )),
         const SizedBox(height: 8.0),
-        EventListWidget(selectedEvents: _selectedEvents),
+        EventListWidget(selectedEvents: _selectedEvents, date: _selectedDay!),
       ]),
     );
   }

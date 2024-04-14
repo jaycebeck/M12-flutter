@@ -16,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _signUpWithEmailAndPassword() async {
     try {
+      // ignore: unused_local_variable
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -37,34 +38,34 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: const Text('Sign Up'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _signUpWithEmailAndPassword,
-              child: Text('Sign Up'),
+              child: const Text('Sign Up'),
             ),
             if (_errorMessage.isNotEmpty)
-              Text(_errorMessage, style: TextStyle(color: Colors.red)),
+              Text(_errorMessage, style: const TextStyle(color: Colors.red)),
           ],
         ),
       ),

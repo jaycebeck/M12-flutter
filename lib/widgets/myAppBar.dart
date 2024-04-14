@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:m12calendar_flutter/pages/calendarPage.dart';
 import 'package:m12calendar_flutter/pages/login.dart';
 import 'package:m12calendar_flutter/pages/logout.dart';
-import 'package:m12calendar_flutter/pages/signin.dart';
+import 'package:m12calendar_flutter/pages/signup.dart';
 
 import '../main.dart';
-import '../pages/events_example.dart';
 
 class AppBars extends AppBar {
   final BuildContext context;
@@ -20,6 +19,8 @@ class AppBars extends AppBar {
                 icon: Icon(Icons.home_outlined)),
             actions: FirebaseAuth.instance.currentUser != null
                 ? <Widget>[
+                    Text(
+                        "Welcome, ${FirebaseAuth.instance.currentUser!.email}"),
                     IconButton(
                         onPressed: () => Navigator.push(
                             context,

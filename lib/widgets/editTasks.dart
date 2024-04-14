@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 class EditTaskDialog extends StatefulWidget {
   final String initialTitle;
   final String initialDescription;
-  final Function(String title, String description) onUpdate;
+  final DateTime initialDate;
+  final Function(String title, String description, DateTime date) onUpdate;
+  final Function(String title, DateTime date) onDelete;
 
   EditTaskDialog({
     required this.initialTitle,
     required this.initialDescription,
     required this.onUpdate,
+    required this.initialDate,
+    required this.onDelete,
   });
 
   @override
@@ -57,11 +61,18 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
       ),
       actions: <Widget>[
         TextButton(
+            onPressed: () {
+              widget.onDelete(_titleController.text, widget.initialDate);
+              Navigator.of(context).pop();
+            },
+            child: Text('Delete', style: TextStyle(color: Colors.red))),
+        TextButton(
           onPressed: () {
             // When the user clicks 'Save', call the onUpdate function with the updated values
             widget.onUpdate(
               _titleController.text,
               _descriptionController.text,
+              widget.initialDate,
             );
             Navigator.of(context).pop(); // Close the dialog
           },

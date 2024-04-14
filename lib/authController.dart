@@ -1,6 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:m12calendar_flutter/utils.dart';
+
+
+class Event {
+  final String title;
+  final String description;
+
+  const Event(this.title, this.description);
+}
+
 
 Future<void> userSetup() async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -11,13 +19,16 @@ Future<void> userSetup() async {
   return;
 }
 
-Future<List<Event>> getTasksForDay(DateTime day) async {
+Future<List<Event>> getTasksForDay(DateTime date) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser!.uid.toString();
+
+  String formattedDate = date.toIso8601String().split('T')[0];
+
   CollectionReference eventCollection = FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
-      .collection(day.toString());
+      .collection(formattedDate);
 
   final querySnapshot = await eventCollection.get();
 
@@ -27,32 +38,66 @@ Future<List<Event>> getTasksForDay(DateTime day) async {
   }).toList();
 }
 
-Future<void> addTask(String title, String description, String date) async {
+Future<void> addTask(String title, String description, DateTime date) async {
   FirebaseAuth auth = FirebaseAuth.instance;
-  String uid = auth.currentUser!.uid.toString();
-  CollectionReference tasks =
-      FirebaseFirestore.instance.collection('users').doc(uid).collection(date);
+  String uid = auth.currentUser!.uid;
 
-  tasks.add({'title': title, 'description': description});
-  return;
+  // Use a combination of date and title as the document ID
+  String formattedDate = date.toIso8601String().split('T')[0];
+
+  // Reference to the tasks collection for the specific user and date
+  CollectionReference tasks = FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection(formattedDate);
+
+  // Set the task data with the specified document ID
+  await tasks.doc(title).set({
+    'title': title,
+    'description': description,
+  });
 }
 
-Future<Future<QuerySnapshot<Object?>>> getTasks(String date) async {
+Future<Future<QuerySnapshot<Object?>>> getTasks(DateTime date) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser!.uid.toString();
-  CollectionReference tasks =
-      FirebaseFirestore.instance.collection('users').doc(uid).collection(date);
+
+  String formattedDate = date.toIso8601String().split('T')[0];
+
+  CollectionReference tasks = FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection(formattedDate);
   return tasks.get();
 }
 
-Future<void> updateTask(String titleNew, String descriptionNew) async {
+Future<void> updateTask(
+    String title, String descriptionNew, DateTime date) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser!.uid.toString();
-  // CollectionReference tasks = FirebaseFirestore.instance
-  //     .collection('users')
-  //     .doc(uid)
-  // //     .collection(date);
 
-  // // tasks.doc(docId).update({'title': titleNew, 'description': descriptionNew});
+  String formattedDate = date.toIso8601String().split('T')[0];
+
+  CollectionReference tasks = FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection(formattedDate);
+
+  tasks.doc(title).update({'description': descriptionNew});
+  return;
+}
+
+Future<void> deleteTask(String title, DateTime date) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String uid = auth.currentUser!.uid.toString();
+
+  String formattedDate = date.toIso8601String().split('T')[0];
+
+  CollectionReference tasks = FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection(formattedDate);
+
+  tasks.doc(title).delete();
   return;
 }
